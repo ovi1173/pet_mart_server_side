@@ -40,39 +40,44 @@ async function run() {
 
         // GET SERVICES FROM DATABASE
         app.get('/services', async (req, res) => {
-            const result = await petServices.find().toArray();
+            const { category } = req.query;
+            const query = {};
+            if (category) {
+                query.category = category;
+            }
+            const result = await petServices.find(query).toArray();
             res.send(result);
         })
 
-        app.get('/services/:id',async(req,res)=>{
+        app.get('/services/:id', async (req, res) => {
             const id = req.params
             console.log(id);
-            const query = {_id: new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await petServices.findOne(query)
             res.send(result);
         })
 
-        app.get('/my-services',async(req,res)=>{
-            const {email} = req.query
-            const query = {email: email}
+        app.get('/my-services', async (req, res) => {
+            const { email } = req.query
+            const query = { email: email }
             const result = await petServices.find().toArray()
             res.send(result)
         })
 
-        app.put('/update/:id',async(req,res)=>{
+        app.put('/update/:id', async (req, res) => {
             const data = req.body;
             console.log(data)
             const id = req.params;
-            const query = {_id: new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const updateServices = {
                 $set: data
             }
-            const result = await petServices.updateOne(query,updateServices)
+            const result = await petServices.updateOne(query, updateServices)
         })
         // delete
-        app.delete('/delete/:id',async(req,res)=>{
+        app.delete('/delete/:id', async (req, res) => {
             const id = req.params
-            const query = {_id: new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await petServices.deleteOne(query)
             res.send(result);
         })
