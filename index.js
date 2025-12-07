@@ -28,6 +28,7 @@ async function run() {
         await client.connect();
         const database = client.db('petService');
         const petServices = database.collection('services');
+        const orderCollections = database.collection('orders');
         // POST OR SAVE SERVICE TO DATABASE
         app.post('/services', async (req, res) => {
             const data = req.body;
@@ -80,6 +81,11 @@ async function run() {
             const query = { _id: new ObjectId(id) }
             const result = await petServices.deleteOne(query)
             res.send(result);
+        })
+        app.post('/orders',async(req,res)=>{
+            const data = req.body;
+            const result = await orderCollections.insertOne(data);
+            res.status(201).send(result);
         })
 
         await client.db("admin").command({ ping: 1 });
